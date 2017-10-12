@@ -1,0 +1,52 @@
+{
+  "intents": [
+    {
+      "name": "AboutIntent",
+      "samples": [],
+      "slots": []
+    },
+    {
+      "name": "AMAZON.CancelIntent",
+      "samples": []
+    },
+    {
+      "name": "AMAZON.HelpIntent",
+      "samples": []
+    },
+    {
+      "name": "AMAZON.NoIntent",
+      "samples": []
+    },
+    {
+      "name": "AMAZON.StopIntent",
+      "samples": []
+    },
+    {
+      "name": "AMAZON.YesIntent",
+      "samples": []
+    },
+    {
+      "name": "StoryIntent",
+      "samples": [
+        "tell me a story",
+        "tell me a ghost story",
+        "tell me a campfire tale",
+        "tell me a tale",
+		"scare me",
+		"frighten me",
+        "i want to be scared",
+        "i want to be frightened",
+        "try to scare me",
+        "try to frighten me",
+		"tell me a scary story",
+		"tell me a ghost story",
+		"tell me a campfire tale",
+        "i want to hear a scary story",
+        "i want to hear a story",
+		"i want to hear a ghost story",
+		"i want to hear a campfire tale"
+      ],
+      "slots": []
+    }
+  ]
+}
