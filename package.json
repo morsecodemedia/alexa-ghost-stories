@@ -1,0 +1,19 @@
+{
+  "name": "skill-ghost-stories",
+  "version": "1.0.0",
+  "description": "Ghost Stories is a crowd-sourced Alexa skill. If you would like to submit a story to the skill, please visit the skill's webpage, or the skill's page in the Amazon store for more information.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "alexa",
+    "skill",
+    "fact"
+  ],
+  "author": "morsecodemedia",
+  "license": "MIT",
+  "dependencies": {
+    "alexa-sdk": "^1.0.12"
+  }
+}

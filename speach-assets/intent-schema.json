@@ -2,7 +2,9 @@
   "intents": [
     {
       "name": "AboutIntent",
-      "samples": [],
+      "samples": [
+		  "about"
+	  ],
       "slots": []
     },
     {
@@ -11,7 +13,11 @@
     },
     {
       "name": "AMAZON.HelpIntent",
-      "samples": []
+      "samples": [
+		  "help",
+		  "i need help",
+		  "help me"
+	  ]
     },
     {
       "name": "AMAZON.NoIntent",

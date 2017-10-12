@@ -1,15 +1,17 @@
-let languageStrings = {
-    'en': {
-        'translation': {
-            'WELCOME' : 'Welcome to Ghost Stories!',
-            'HELP'    : 'Say about, to hear more about submitting a story to the skill. Say updates, to hear about the latest addition. Or say, tell me a ghost story, when you are ready to be frightening.',
-            'ABOUT'   : 'Ghost stories is a crowd-sourced skill. If you would like to submit a story to the skill, please visit the skill\'s webpage, or the skill\'s page in the Amazon store for more information.',
-            'STOP'    : 'Okay, scare you later!',
-			'UPDATES' : '<say-as interpret-as="date">10102017</say-as>, the skill was launched with 9 frightening ghost stories.'
-        }
-    }
-};
-let data = {
+'use strict';
+
+const Alexa = require('alexa-sdk');
+
+const APP_ID = 'amzn1.ask.skill.fa87b466-106d-4c71-83af-16d03b2e2c5c';
+
+const SKILL_NAME = 'Ghost Stories';
+const ABOUT_MESSAGE = "Ghost Stories is a crowd-sourced skill. If you would like to submit a story to the skill, please visit the skill\'s webpage, or the skill\'s page in the Amazon store for more information.";
+const HELP_MESSAGE = 'Say about, to hear more about submitting a story to the skill. Say updates, to hear about the latest addition. Or say, tell me a ghost story, when you are ready to be frightening.';
+const HELP_REPROMPT = 'What can I help you with?';
+const STOP_MESSAGE = 'Okay, scare you later!';
+const UPDATES_MESSAGE = '<say-as interpret-as="date">10122017</say-as>, the skill was updated with 9 frightening ghost stories.';
+
+const data = {
     'stories' : [
         {
 			'title'			: 'Axe Murder Hollow',
@@ -66,66 +68,80 @@ let data = {
             'story'			: 'Jane wore a yellow ribbon around her neck everyday. And I mean everyday, rain or shine, whether it matched her outfit or not. It annoyed her best friend Johnny after awhile. He was her next door neighbor and had known Jane since she was three. When he was young, he had barely noticed the yellow ribbon, but now they were in high school together, it bothered him. "Why do you wear that yellow ribbon around your neck, Jane?" he\'d ask her every day. But she wouldn\'t tell him. Still, in spite of this aggravation, Johnny thought she was cute. He asked her to the soda shoppe for an ice cream sundae. Then he asked her to watch him play in the football game. Then he started seeing her home. And come the spring, he asked her to the dance. Jane always said yes when he asked her out. And she always wore a yellow dress to match the ribbon around her neck. It finally occurred to Johnny that he and Jane were going steady, and he still didn\'t know why she wore the yellow ribbon around her neck. So he asked her about it yet again, and yet again she did not tell him. "Maybe someday I\'ll tell you about it," she\'d reply. Someday! That answer annoyed Johnny, but he shrugged it off, because Jane was so cute and fun to be with. Well, time flew past, as it has a habit of doing, and one day Johnny proposed to Jane and was accepted. They planned a big wedding, and Jane hinted that she might tell him about the yellow ribbon around her neck on their wedding day. But somehow, what with the preparations and his beautiful bride, and the lovely reception, Johnny never got around to asking Jane about it. And when he did remember, she got a bit teary-eyed, and said: "We are so happy together, what difference does it make?" And Johnny decided she was right. Johnny and Jane raised a family of four, with the usual ups and downs, laughter and tears. When their golden anniversary rolled around, Johnny once again asked Jane about the yellow ribbon around her neck. It was the first time he\'d brought it up since the week after their wedding. Whenever their children asked him about it, he\'d always hushed them, and somehow none of the kids had dared ask their mother. Jane gave Johnny as sad look and said: "Johnny, you\'ve waited this long. You can wait awhile longer." And Johnny agreed. It was not until Jane was on her death bed a year later that Johnny, seeing his last chance slip away, asked Jane one final time about the yellow ribbon she wore around her neck. She shook her head a bit at his persistence, and then said with a sad smile: "Okay Johnny, you can go ahead and untie it." With shaking hands, Johnny fumbled for the knot and untied the yellow ribbon around his wife\'s neck. And Jane\'s head fell off.',
 		}
     ]
-}
+};
 
-let Alexa = require('alexa-sdk');
-
-exports.handler = function(event, context, callback) {
-    var alexa = Alexa.handler(event, context);
-    alexa.resources = languageStrings;
+exports.handler = (event, context) => {
+    const alexa = Alexa.handler(event, context);
+    alexa.AppId = APP_ID;
     alexa.registerHandlers(handlers);
     alexa.execute();
 };
 
-let handlers = {
-    'LaunchRequest': function () {
-        var say = this.t('WELCOME') + ' ' + this.t('HELP');
-        this.emit(':ask', say, say);
-    },
-    'AboutIntent': function () {
-        this.emit(':tell', this.t('ABOUT'));
-    },
-	'UpdatesIntent': function() {
-		this.emit(':tell', this.t('UPDATES'));
+const handlers = {
+    "LaunchRequest": function () {
+		//this.response.speak(WELCOME_MESSAGE);
+		//this.emit(':responseReady');
+        this.emit(":tell", "You started this skill successfully!");
 	},
-    'AMAZON.HelpIntent': function () {
-        this.emit(':ask', this.t('HELP'));
+	'AMAZON.HelpIntent': function () {
+        const speechOutput = HELP_MESSAGE;
+        const reprompt = HELP_REPROMPT;
+
+        this.response.speak(speechOutput).listen(reprompt);
+        this.emit(':responseReady');
     },
     'AMAZON.CancelIntent': function () {
-        this.emit(':tell', this.t('STOP'));
+        this.response.speak(STOP_MESSAGE);
+        this.emit(':responseReady');
     },
     'AMAZON.StopIntent': function () {
-        this.emit(':tell', this.t('STOP'));
+        this.response.speak(STOP_MESSAGE);
+        this.emit(':responseReady');
     },
+	'AboutIntent': function () {
+		this.response.speak(ABOUT_MESSAGE);
+		this.emit(':responseReady');
+	},
+	'UpdatesIntent': function() {
+		this.response.speak(UPDATES_MESSAGE);
+		this.emit(':responseReady');
+	},
 	'AMAZON.NoIntent': function () {
-        this.emit('AMAZON.StopIntent');
-    },
+		this.response.speak(STOP_MESSAGE);
+		this.emit(':responseReady');
+	},
 	'AMAZON.YesIntent': function () {
-        let storyTitle = this.attributes['story'];
-        let storyDetails = getStoryBytitle(storyTitle);
+		let storyTitle = this.attributes['story'];
+		let storyDetails = getStoryByTitle(storyTitle);
 
-        let say = storyDetails.title
-            + ' by ' + storyDetails.author
-            + ', was contributed by ' + storyDetails.contributor
-            + ', ' + storyDetails.story;
+		let STORY_MESSAGE = storyDetails.title
+			+ ' by ' + storyDetails.author
+			+ ', was contributed by ' + storyDetails.contributor
+			+ ', ' + storyDetails.story;
 
-        let card = storyDetails.title + '\n author: ' + storyDetails.author + '\n contributed by: '
+        let CARD_MESSAGE = storyDetails.title + '\n author: ' + storyDetails.author + '\n contributed by: '
             + storyDetails.contributor + '\n';
 
-        this.emit(':tellWithCard', say, storyDetails.title, card);
+		const speechOutput = STORY_MESSAGE;
 
-    },
-    'StoryIntent': function () {
-        let story = randomArrayElement(getStoryByTitle());
-        this.attributes['story'] = story.title;
+		this.response.cardRenderer(SKILL_NAME, CARD_MESSAGE);
+        this.response.speak(speechOutput);
+        this.emit(':responseReady');
+	},
+	'StoryIntent': function () {
+		let story = randomArrayElement(getStoryByTitle());
+		this.attributes['story'] = story.title;
 
-        let say = 'Ah, here\'s a good one, ' + story.title + '. Would you like to hear it?';
-        this.emit(':ask', say);
-    }
+		// TODO: Randomize the "found a story" reponse
+		let FOUND_STORY_MESSAGE = 'Ah, here\'s a good one, ' + story.title + '. Would you like to hear it?';
+		this.response.speak(FOUND_STORY_MESSAGE);
+        this.emit(':responseReady');
+	}
+
 };
 
 function getStoryByTitle() {
-    let list = [];
+    var list = [];
     for (var i = 0; i < data.stories.length; i++) {
         if(data.stories[i].title >  -1) {
             list.push(data.stories[i]);
