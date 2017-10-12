@@ -5,6 +5,7 @@ const Alexa = require('alexa-sdk');
 const APP_ID = 'amzn1.ask.skill.fa87b466-106d-4c71-83af-16d03b2e2c5c';
 
 const SKILL_NAME = 'Ghost Stories';
+const WELCOME_MESSAGE = 'Welcome to Ghost Stories!';
 const ABOUT_MESSAGE = "Ghost Stories is a crowd-sourced skill. If you would like to submit a story to the skill, please visit the skill\'s webpage, or the skill\'s page in the Amazon store for more information.";
 const HELP_MESSAGE = 'Say about, to hear more about submitting a story to the skill. Say updates, to hear about the latest addition. Or say, tell me a ghost story, when you are ready to be frightening.';
 const HELP_REPROMPT = 'What can I help you with?';
@@ -79,9 +80,8 @@ exports.handler = (event, context) => {
 
 const handlers = {
     "LaunchRequest": function () {
-		//this.response.speak(WELCOME_MESSAGE);
-		//this.emit(':responseReady');
-        this.emit(":tell", "You started this skill successfully!");
+		this.response.speak(WELCOME_MESSAGE);
+		this.emit(':responseReady');
 	},
 	'AMAZON.HelpIntent': function () {
         const speechOutput = HELP_MESSAGE;
