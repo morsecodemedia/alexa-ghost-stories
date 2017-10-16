@@ -21,7 +21,12 @@
     },
     {
       "name": "AMAZON.NoIntent",
-      "samples": []
+      "samples": [
+		  "no",
+		  "nah",
+		  "no, thanks",
+		  "no, thank you"
+	  ]
     },
     {
       "name": "AMAZON.StopIntent",
@@ -29,7 +34,10 @@
     },
     {
       "name": "AMAZON.YesIntent",
-      "samples": []
+      "samples": [
+		  "yes",
+		  "yes, please"
+	  ]
     },
     {
       "name": "StoryIntent",

@@ -113,14 +113,16 @@ const handlers = {
 	'AMAZON.YesIntent': function () {
 		let storyTitle = this.attributes['story'];
 		let storyDetails = getStoryByTitle(storyTitle);
+		console.log('the next console log should be let storyDetails = getStoryByTitle(storyTitle)');
+		console.log(storyDetails);
 
-		let STORY_MESSAGE = storyDetails.title
-			+ ' by ' + storyDetails.author
-			+ ', was contributed by ' + storyDetails.contributor
-			+ ', ' + storyDetails.story;
+		let STORY_MESSAGE = storyDetails[0].title
+			+ ' by ' + storyDetails[0].author
+			+ ', was contributed by ' + storyDetails[0].contributor
+			+ ', ' + storyDetails[0].story;
 
-        let CARD_MESSAGE = storyDetails.title + '\n author: ' + storyDetails.author + '\n contributed by: '
-            + storyDetails.contributor + '\n';
+        let CARD_MESSAGE = storyDetails[0].title + '\n author: ' + storyDetails[0].author + '\n contributed by: '
+            + storyDetails[0].contributor + '\n';
 
 		const speechOutput = STORY_MESSAGE;
 
@@ -129,25 +131,49 @@ const handlers = {
         this.emit(':responseReady');
 	},
 	'StoryIntent': function () {
-		let story = randomArrayElement(getStoryByTitle());
+		console.log('Invoked StoryIntent - starting StoryIntent');
+		let story = randomArrayElement(getStories());
+		console.log('This should be the random story pulled from AoO: '+story);
 		this.attributes['story'] = story.title;
+		console.log('We officially set this.attributes: '+this.attributes['story']);
 
 		// TODO: Randomize the "found a story" reponse
 		let FOUND_STORY_MESSAGE = 'Ah, here\'s a good one, ' + story.title + '. Would you like to hear it?';
-		this.response.speak(FOUND_STORY_MESSAGE);
-        this.emit(':responseReady');
+		this.response.speak(FOUND_STORY_MESSAGE).listen(FOUND_STORY_MESSAGE);
+		this.emit(':responseReady');
+		console.log('ending StoryIntent');
 	}
 
 };
 
-function getStoryByTitle() {
-    var list = [];
-    for (var i = 0; i < data.stories.length; i++) {
-        if(data.stories[i].title >  -1) {
-            list.push(data.stories[i]);
-        }
-    }
+function getStories() {
+	var list = [];
+	console.log('starting getStories()');
+
+	Object.keys(data.stories).forEach(key => {
+		console.log('// the value of the current key.');
+		console.log(data.stories[key]);   // the value of the current key.
+		list.push(data.stories[key]);
+	});
+
+	console.log('ending getStories()');
     return list;
+}
+
+function getStoryByTitle(storyTitle) {
+	console.log('starting getStoryByTitle() with the title of: '+ storyTitle);
+	if (!storyTitle) {
+		console.log('getStoryByTitle(): Need to supply a title of a story.');
+		return false;
+	}
+	var story = [];
+    for (var i = 0; i < data.stories.length; i++) {
+        if(data.stories[i].title.search(storyTitle) > -1) {
+            story.push(data.stories[i]);
+        }
+	}
+	console.log('ending getStoryByTitle()');
+    return story;
 }
 
 function randomArrayElement(array) {
